@@ -10,9 +10,12 @@ class Game
                 :winner, :last_guess,
                 :last_accuracy,
                 :quit
+  
+  attr_reader :code
 
   def initialize
     @board = Board.new
+    @choices = %w[1 2 3 4 5 6] # an array of words
     @code = nil
     @encoder = nil
     @decoder = nil
@@ -25,7 +28,10 @@ class Game
 
   def play
     initialize_players
-    start
+    set_code
+    keep_playing until stop_conditions_met
+
+    report_end_terms
   end
 
   private
@@ -42,7 +48,7 @@ class Game
 
   # sets role chosen for human player
   def human_choose_role
-    choose_role_prompt
+    report_choose_role
     role = gets.chomp.upcase
 
     if role == 'E'
@@ -51,6 +57,7 @@ class Game
       self.decoder = Player.new
     else
       report_invalid_role_input
+      human_choose_role
     end
   end
 
@@ -75,49 +82,65 @@ class Game
     board.full?
   end
 
-  def has_winner?
+  def decoded?
     !winner.nil?
   end
 
-  def game_quit?
-    !quit.nil?
-  end
-
   def stop_conditions_met
-    board_full || has_winner || game_quit 
+    board_full? || decoded? || quit
   end
 
+  def set_code
+    self.code = encoder.encode(choices)
+  end
 
-  # contains all blocks where encoder sets code
-  # ... decoder initial guess
-  # ... encoder evaluates guess
-  def initial_guess
-    encoder.encode
-    self.last_guess = decoder.decode
-    self.last_accuracy = encoder.evaluate(last_guess)
+  def update_board
+    board.update(last_guess, last_accuracy)
   end
 
   def keep_playing
-    
+    player_input = decoder.decode(last_guess, last_accuracy, choices)
+
+    if player_input == 'z'
+      quit_game
+    else
+      update_last_guess(player_input)
+      update_last_accuracy(player_input)
+      update_board
+      decoded?
+    end
   end
 
   # reports the cause of why the game was ended 
   def report_end_terms
     if board_full
-      report_full_board
-    elsif has_winner
-      report_has_winner(self.winner)
+      # encoder wins
+      report_encoder_wins
+    elsif decoded 
+      report_decoder_wins
     elsif game_quit
       report_game_quit
     end
   end
 
-  def start
-    initial_guess
+  # the following private methods are used to update class attributes
 
-    keep_playing until stop_conditions_met 
+  def quit_game
+    self.quit = true
+  end
 
-    report_end_terms
+  def update_last_guess(latest_guess)
+    self.last_guess = latest_guess
+  end
+
+  def update_last_accuracy(last_guess)
+    self.last_accuracy = encoder.evaluate(last_guess)
+  end
+
+  def decoded? 
+    if last_accuracy.all?('+')
+      self.winner = true 
+    end
   end
 
   # the following private methods are used define shorter accessors
