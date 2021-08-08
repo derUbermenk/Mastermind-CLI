@@ -1,17 +1,15 @@
 # frozen_string_literal: true
 require_relative 'display'
+require_relative 'board'
+require_relative 'player'
 
 # Contains all the logic in order to play game
 class Game
   include Display
 
-  attr_accessor :board, :code,
-                :encoder, :decoder,
-                :winner, :last_guess,
-                :last_accuracy,
+  attr_accessor :board, :code, :encoder, :decoder,
+                :winner, :last_guess, :last_accuracy,
                 :quit
-  
-  attr_reader :code
 
   def initialize
     @board = Board.new
@@ -28,6 +26,7 @@ class Game
 
   def play
     initialize_players
+
     set_code
     keep_playing until stop_conditions_met
 
@@ -48,12 +47,14 @@ class Game
 
   # sets role chosen for human player
   def human_choose_role
+
     report_choose_role
     role = gets.chomp.upcase
 
-    if role == 'E'
+    case role
+    when 'E'
       self.encoder = Player.new
-    elsif role == 'D'
+    when 'D'
       self.decoder = Player.new
     else
       report_invalid_role_input
@@ -82,10 +83,6 @@ class Game
     board.full?
   end
 
-  def decoded?
-    !winner.nil?
-  end
-
   def stop_conditions_met
     board_full? || decoded? || quit
   end
@@ -99,9 +96,9 @@ class Game
   end
 
   def keep_playing
-    player_input = decoder.decode(last_guess, last_accuracy, choices)
+    player_input = decoder.decode(choices, last_guess, last_accuracy)
 
-    if player_input == 'z'
+    if player_input == ['z']
       quit_game
     else
       update_last_guess(player_input)
@@ -134,7 +131,7 @@ class Game
   end
 
   def update_last_accuracy(last_guess)
-    self.last_accuracy = encoder.evaluate(last_guess)
+    self.last_accuracy = encoder.evaluate(last_guess, choices)
   end
 
   def decoded? 
@@ -171,5 +168,9 @@ class Game
 
   def quit
     self.quit
+  end
+
+  def choices
+    self.choices
   end
 end

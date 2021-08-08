@@ -1,6 +1,17 @@
 # Contains all methods for displaying prompts and messages
 module Display
 
+  # main Display
+
+  def report_instructions
+    puts " \n INSTRUCTIONS: sogno di volaire \n "
+  end
+
+  def report_keep_playing_prompt
+    print " \n Do you want to play another game? [Yes[y] No[n]]: "
+  end
+
+
   # Game Display
 
   def report_choose_role
@@ -21,5 +32,30 @@ module Display
 
   def report_game_quit
     puts " \n Game Quit \n "
+  end
+
+  # Player Display
+
+  def report_ask_for_code
+    print " \n enter code: "
+  end
+
+  def report_invalid_code
+    puts " \n Invalide code entered \n Enter another code \n "
+  end
+
+  # Board display
+
+  # Shows formatted board rows
+  # @param board [Board]
+  def show_board(board)
+    puts board.rows.map { |row| format_row(row) }.join("\n")
+  end
+
+  # formats a row for display
+  #
+  # @param row [Hash] contains row guess and accuracy
+  def format_row(row)
+    " #{row[:guess].join(' | ')} || #{row[:accuracy].join(' | ')} "
   end
 end
