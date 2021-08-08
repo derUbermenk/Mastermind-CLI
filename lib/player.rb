@@ -98,15 +98,12 @@ end
 # a sub class of player with automated methods
 # ... for decoding and encoding
 class AI < Player
-
   # computer picks randomly from choices
   #
   # @param choices [Array] an array of possible choices
   def encode(choices)
-    code = Array.new(4) { choices[rand(0..3)] }
+    Array.new(4) { choices[rand(0..3)] }
   end
 
-  def decode(choices, last_guess, last_accuracy)
-    # still undecided
-  end
+  def decode(choices, last_guess, last_accuracy) end
 end

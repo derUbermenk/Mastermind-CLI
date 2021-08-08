@@ -1,4 +1,6 @@
 # frozen_string_literal: true
+require 'pry-byebug'
+
 require_relative 'display'
 require_relative 'board'
 require_relative 'player'
@@ -64,16 +66,17 @@ class Game
 
   # sets role of ai
   def ai_set_role
-    if self.encoder.nil?
-      self.encoder = AI.new
+    if encoder.nil?
+      @encoder = AI.new
     else
-      self.decoder = AI.new
+      @decoder = AI.new
     end
   end
 
   # initializes players made from player choice
   def initialize_players
     human_choose_role
+    binding.pry
     ai_set_role
   end
 
@@ -96,7 +99,6 @@ class Game
   end
 
   def keep_playing
-    ###
     player_input = decoder.decode(choices, last_guess, last_accuracy)
 
     if player_input == ['z']
