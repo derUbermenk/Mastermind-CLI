@@ -96,6 +96,7 @@ class Game
   end
 
   def keep_playing
+    ###
     player_input = decoder.decode(choices, last_guess, last_accuracy)
 
     if player_input == ['z']
