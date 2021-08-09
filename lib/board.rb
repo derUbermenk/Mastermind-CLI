@@ -22,11 +22,10 @@ class Board
   def update(guess, accuracy)
     # for every update, show board
     rows[current_row] = make_row(guess, accuracy)
+    self.current_row += 1
 
     show_board(self)
   end
-
-  private
 
   # checks if board is full -- all rows have values of not space
   # ... this can be checked if last row has values of not space
@@ -37,12 +36,12 @@ class Board
 
     last_row = self.rows[11]
 
-    if last_row[:guess] == true && last_row[:accuracy] == true
-      true
-    else
-      false
-    end
+    return true unless last_row[:guess].all?(' ') && last_row[:accuracy].all?(' ')
+
+    false
   end
+
+  private
 
   # makes a hash with array values
   # ... defaults to empty row

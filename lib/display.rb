@@ -44,6 +44,14 @@ module Display
     puts " \n Invalide code entered \n Enter another code \n "
   end
 
+  def report_possible_choices(choices)
+    puts " \n Choices: #{choices.join(' ')} \n "
+  end
+
+  def report_ask_for_input
+    print " \n enter guess: "
+  end
+
   # Board display
 
   # Shows formatted board rows

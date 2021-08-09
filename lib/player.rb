@@ -29,10 +29,10 @@ class Player
   # @param last_acc [Array] the last accuracy of the guess
   # @param choices [Array] the available numerals allowed for input
   # @return [Array]
-  def decode(choice, last_guess = nil, last_acc = nil)
+  def decode(choices, last_guess = nil, last_acc = nil)
     report_possible_choices(choices)
     report_ask_for_input
-    input = gets.prompt.downcase
+    input = gets.chomp.downcase
 
     return input if input == ['z']
 

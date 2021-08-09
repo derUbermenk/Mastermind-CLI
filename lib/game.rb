@@ -21,8 +21,8 @@ class Game
     @decoder = nil
     @winner = nil
 
-    @last_guess = nil
-    @last_accuracy = nil
+    @last_guess = Array.new(4) 
+    @last_accuracy = Array.new(4)
     @quit = nil
   end
 
@@ -45,11 +45,10 @@ class Game
   # END OF METHOD GROUP: MAIN METHOD NAME
   DOC
 
-  # METHOD GROUP: initialize_player 
+  # METHOD GROUP: initialize_player
 
   # sets role chosen for human player
   def human_choose_role
-
     report_choose_role
     role = gets.chomp.upcase
 
@@ -67,22 +66,21 @@ class Game
   # sets role of ai
   def ai_set_role
     if encoder.nil?
-      @encoder = AI.new
+      self.encoder = AI.new
     else
-      @decoder = AI.new
+      self.decoder = AI.new
     end
   end
 
   # initializes players made from player choice
   def initialize_players
     human_choose_role
-    binding.pry
     ai_set_role
   end
 
   # END OF METHOD GROUP
 
-  def board_full
+  def board_full?
     board.full?
   end
 
@@ -111,12 +109,12 @@ class Game
     end
   end
 
-  # reports the cause of why the game was ended 
+  # reports the cause of why the game was ended
   def report_end_terms
-    if board_full
+    if board_full?
       # encoder wins
       report_encoder_wins
-    elsif decoded 
+    elsif decoded?
       report_decoder_wins
     elsif game_quit
       report_game_quit
@@ -137,43 +135,41 @@ class Game
     self.last_accuracy = encoder.evaluate(last_guess, choices)
   end
 
-  def decoded? 
-    if last_accuracy.all?('+')
-      self.winner = true 
-    end
+  def decoded?
+    self.winner = true if last_accuracy.all?('+')
   end
 
   # the following private methods are used define shorter accessors
 
   def encoder
-    self.encoder
+    @encoder
   end
 
   def decoder
-    self.decoder
+    @decoder
   end
 
   def last_guess
-    self.last_guess
+    @last_guess
   end
 
   def last_accuracy
-    self.last_accuracy
+    @last_accuracy
   end
 
   def board
-    self.board
+    @board
   end
 
   def winner
-    self.winner
+    @winner
   end
 
   def quit
-    self.quit
+    @quit
   end
 
   def choices
-    self.choices
+    @choices
   end
 end
