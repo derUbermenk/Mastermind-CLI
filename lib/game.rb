@@ -27,6 +27,7 @@ class Game
   end
 
   def play
+    #binding.pry
     initialize_players
 
     set_code
@@ -113,10 +114,10 @@ class Game
   def report_end_terms
     if board_full?
       # encoder wins
-      report_encoder_wins
+      report_encoder_wins(code)
     elsif decoded?
       report_decoder_wins
-    elsif game_quit
+    elsif quit_game
       report_game_quit
     end
   end
@@ -132,7 +133,7 @@ class Game
   end
 
   def update_last_accuracy(last_guess)
-    self.last_accuracy = encoder.evaluate(last_guess, choices)
+    self.last_accuracy = encoder.evaluate(last_guess, code)
   end
 
   def decoded?
@@ -171,5 +172,9 @@ class Game
 
   def choices
     @choices
+  end
+
+  def code
+    @code
   end
 end

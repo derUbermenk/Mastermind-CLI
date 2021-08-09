@@ -1,3 +1,4 @@
+
 require_relative 'display'
 
 # contains all methods for a player object
@@ -30,19 +31,15 @@ class Player
   # @param choices [Array] the available numerals allowed for input
   # @return [Array]
   def decode(choices, last_guess = nil, last_acc = nil)
+
     report_possible_choices(choices)
-    report_ask_for_input
-    input = gets.chomp.downcase
+    code = ask_for_input
 
-    return input if input == ['z']
+    return code if code == ['z']
 
-    # proceed to distinguishing if input
-    # ... falls within choices
-    code = input.split('')
-
-    unless in?(choices, code)
-      report_invalide_code
-      decode(last_guess, last_acc, choices)
+    until in?(choices, code) && code.length.eql?(4)
+      report_invalid_code
+      code = ask_for_input
     end
 
     code
@@ -56,11 +53,24 @@ class Player
   def evaluate(last_guess, code)
     return Array.new(4,'+') if last_guess == code
 
-    # else return accuracy
-    last_guess.map.with_index { |item, position| check_presence(item, position, code) }
+
+    accuracy = last_guess.map.with_index { |item, position| check_presence(item, position, code) }
+    accuracy.shuffle
   end
 
   private
+
+  # asks for player input
+  #
+  # @return [Array]
+  def ask_for_input
+    report_ask_for_input
+    input = gets.chomp.downcase
+
+    # proceed to distinguishing if input
+    # ... falls within choices
+    code = input.split('')
+  end
 
   # checks if all of elements in code is in choices
   #
@@ -105,5 +115,6 @@ class AI < Player
     Array.new(4) { choices[rand(0..3)] }
   end
 
+  # still unable to decide
   def decode(choices, last_guess, last_accuracy) end
 end

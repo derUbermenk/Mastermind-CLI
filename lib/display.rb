@@ -15,19 +15,19 @@ module Display
   # Game Display
 
   def report_choose_role
-    puts " \n Choose the role you want to play as: Decoder[D] Encoder[E] \n"
+    print " \n Choose the role you want to play as: Decoder[D] Encoder[E]: "
   end
 
   def report_invalid_role_input
     puts " \n Invalid role entered \n "
   end
 
-  def report_encoder_wins
-    puts " \n Encoder wins \n "
+  def report_encoder_wins(code)
+    puts " \n Encoder wins, \n code is: #{code.join(' ')} "
   end
 
   def report_decoder_wins
-    puts " \n Board Full \n Decoder_wins \n "
+    puts " \n Decoder_wins \n "
   end
 
   def report_game_quit
@@ -41,15 +41,15 @@ module Display
   end
 
   def report_invalid_code
-    puts " \n Invalide code entered \n Enter another code \n "
+    puts " \n Invalide code entered \n Enter another code: \n "
   end
 
   def report_possible_choices(choices)
-    puts " \n Choices: #{choices.join(' ')} \n "
+    puts " \n Choices: #{choices.join(' ')}"
   end
 
   def report_ask_for_input
-    print " \n enter guess: "
+    print ' enter guess: '
   end
 
   # Board display
@@ -57,6 +57,7 @@ module Display
   # Shows formatted board rows
   # @param board [Board]
   def show_board(board)
+    print ("\n")
     puts board.rows.map { |row| format_row(row) }.join("\n")
   end
 

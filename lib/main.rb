@@ -7,13 +7,13 @@ include Display
 
 # main function
 def main
-  game = Game.new
 
   Display.report_instructions
 
   keep_playing = 'y'
 
   while keep_playing == 'y'
+    game = Game.new
     game.play
 
     Display.report_keep_playing_prompt
