@@ -1,4 +1,4 @@
-
+require 'pry-byebug'
 require_relative 'display'
 
 # contains all methods for a player object
@@ -51,11 +51,17 @@ class Player
   # @param code [Array] the actual code
   # @return [Array] array of symbols indicating accuracy
   def evaluate(last_guess, code)
-    return Array.new(4,'+') if last_guess == code
+    return Array.new(4, '+') if last_guess == code
 
+    # remaining_code_items are the code items that are still not checked for presence
+    remaining_code_items = code
 
-    accuracy = last_guess.map.with_index { |item, position| check_presence(item, position, code) }
-    accuracy.shuffle
+    last_guess.each_with_object([]).with_index do |(item, accuracy), position|
+      item_accuracy = check_presence(item, position, code, remaining_code_items)
+      remaining_code_items.delete_at(remaining_code_items.find_index(item)) if ['+', '-'].include?(item_accuracy)
+
+      accuracy << item_accuracy
+    end.shuffle
   end
 
   private
@@ -91,17 +97,13 @@ class Player
   # @param item [String]
   # @param position [Integer] position of integer in guess
   # @param code [Array] strings that must be guessed
+  # @param code [Array] remaining unchecked code items
   # @return [String] accuracy indicator
-  def check_presence(item, position, code)
-    actual_position = code.find_index(item)
+  def check_presence(item, position, code, remaining_code_items)
+    return 'x' unless remaining_code_items.include?(item)
 
-    if actual_position.nil?
-      'x'
-    elsif actual_position == position
-      '+'
-    elsif actual_position != position
-      '-'
-    end
+    actual_position = code.find_index(item)
+    position == actual_position ? '+' : '-'
   end
 end
 
@@ -118,3 +120,10 @@ class AI < Player
   # still unable to decide
   def decode(choices, last_guess, last_accuracy) end
 end
+
+def test
+  binding.pry
+  pl = 1
+end
+
+test

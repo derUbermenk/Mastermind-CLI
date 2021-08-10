@@ -27,6 +27,8 @@ class Game
   end
 
   def play
+    show_board(board)
+
     #binding.pry
     initialize_players
 

@@ -4,7 +4,7 @@ module Display
   # main Display
 
   def report_instructions
-    puts " \n INSTRUCTIONS: sogno di volaire \n "
+    puts " \n INSTRUCTIONS: \n  X - one number not in code \n  + - one number in code and in right place \n  - - one number in code but wrong place \n "
   end
 
   def report_keep_playing_prompt
@@ -41,7 +41,7 @@ module Display
   end
 
   def report_invalid_code
-    puts " \n Invalide code entered \n Enter another code: \n "
+    puts " \n Invalide code entered, enter another code"
   end
 
   def report_possible_choices(choices)
@@ -57,7 +57,7 @@ module Display
   # Shows formatted board rows
   # @param board [Board]
   def show_board(board)
-    print ("\n")
+    puts (" \n       Guess             Accuracy \n ")
     puts board.rows.map { |row| format_row(row) }.join("\n")
   end
 
@@ -65,6 +65,6 @@ module Display
   #
   # @param row [Hash] contains row guess and accuracy
   def format_row(row)
-    " #{row[:guess].join(' | ')} || #{row[:accuracy].join(' | ')} "
+    " #{row[:guess].join(' | ')}   ||   #{row[:accuracy].join(' | ')} "
   end
 end
